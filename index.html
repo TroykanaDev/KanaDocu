@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>일본어 그림 연상 암기장</title>
+    <!-- Noto Sans JP 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen pb-10">
+
+    <!-- 상단 헤더 및 탭 영역 -->
+    <header class="sticky top-0 bg-white shadow-sm z-10">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <h1 class="text-xl font-bold text-center text-blue-600 mb-4">일본어 연상 암기장</h1>
+            <div class="flex justify-center space-x-2">
+                <!-- 활성화된 탭 스타일: bg-blue-500 text-white -->
+                <button id="tab-hira" class="tab-btn active flex-1 py-2 rounded-lg font-semibold bg-blue-500 text-white shadow transition-all duration-200" data-target="hira">
+                    히라가나
+                </button>
+                <!-- 비활성화된 탭 스타일: bg-gray-200 text-gray-600 -->
+                <button id="tab-kata" class="tab-btn flex-1 py-2 rounded-lg font-semibold bg-gray-200 text-gray-600 hover:bg-gray-300 transition-all duration-200" data-target="kata">
+                    가타가나
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 카드 그리드 영역 -->
+    <main class="max-w-4xl mx-auto px-2 mt-4">
+        <!-- jppractice.html과 동일한 5열 그리드 레이아웃 -->
+        <div id="card-grid" class="grid grid-cols-5 gap-2 sm:gap-4">
+            <!-- 자바스크립트를 통해 카드가 여기에 생성됩니다 -->
+        </div>
+    </main>
+
+    <!-- 로직 연결 -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
