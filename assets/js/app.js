@@ -112,7 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
         { "id": "ke4", "script": "kata", "kana": "", "romaji": "", "img": "" },
         { "id": "ke5", "script": "kata", "kana": "", "romaji": "", "img": "" },
         { "id": "wo_k", "script": "kata", "kana": "ヲ", "romaji": "wo", "img": "assets/img/katakana/wo.png" },
-        { "id": "n_k", "script": "kata", "kana": "ン", "romaji": "n", "img": "assets/img/katakana/n.png" }
+        { "id": "n_k", "script": "kata", "kana": "ン", "romaji": "n", "img": "assets/img/katakana/n.png" },
+
+        // 숫자 데이터 (1~10) - 리스트형 전용
+        { "id": "n1", "script": "num", "kana": "いち", "kanji": "一", "digit": "1", "romaji": "ichi" },
+        { "id": "n2", "script": "num", "kana": "に", "kanji": "二", "digit": "2", "romaji": "ni" },
+        { "id": "n3", "script": "num", "kana": "さん", "kanji": "三", "digit": "3", "romaji": "san" },
+        { "id": "n4", "script": "num", "kana": "よん / し", "kanji": "四", "digit": "4", "romaji": "yon / shi" },
+        { "id": "n5", "script": "num", "kana": "ご", "kanji": "五", "digit": "5", "romaji": "go" },
+        { "id": "n6", "script": "num", "kana": "ろく", "kanji": "六", "digit": "6", "romaji": "roku" },
+        { "id": "n7", "script": "num", "kana": "なな / しち", "kanji": "七", "digit": "7", "romaji": "nana / shichi" },
+        { "id": "n8", "script": "num", "kana": "はち", "kanji": "八", "digit": "8", "romaji": "hachi" },
+        { "id": "n9", "script": "num", "kana": "きゅう / く", "kanji": "九", "digit": "9", "romaji": "kyu / ku" },
+        { "id": "n10", "script": "num", "kana": "じゅう", "kanji": "十", "digit": "10", "romaji": "ju" }
     ];
 
     // 초기 렌더링
@@ -134,42 +146,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCards(filter) {
         gridContainer.innerHTML = '';
+        
+        // 레이아웃 스타일 변경: 히라가나/가타카나는 5열 그리드, 숫자는 1열(또는 2열) 리스트
+        if (filter === 'num') {
+            gridContainer.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto";
+        } else {
+            gridContainer.className = "grid grid-cols-5 gap-2 sm:gap-4";
+        }
+
         const filteredData = vocabData.filter(item => item.script === filter);
 
         filteredData.forEach(item => {
-            const wrapper = document.createElement('div');
+            const element = document.createElement('div');
             
-            if (!item.kana) {
-                wrapper.className = "aspect-square opacity-0 pointer-events-none";
-                gridContainer.appendChild(wrapper);
-                return;
+            if (filter === 'num') {
+                // [숫자 탭 전용] 리스트형 단어장 템플릿
+                element.className = "flex items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow";
+                element.innerHTML = `
+                    <div class="text-4xl font-bold text-blue-500 w-16 text-center border-r border-gray-100 mr-4">
+                        ${item.digit}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline space-x-2">
+                            <span class="text-xl font-bold text-gray-800">${item.kanji}</span>
+                            <span class="text-sm text-blue-400 font-medium">${item.kana}</span>
+                        </div>
+                        <div class="text-xs text-gray-400 uppercase font-bold tracking-wider mt-1">
+                            ${item.romaji}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // [히라가나/가타카나 전용] 기존 카드형 템플릿
+                if (!item.kana) {
+                    element.className = "aspect-square opacity-0 pointer-events-none";
+                    gridContainer.appendChild(element);
+                    return;
+                }
+
+                element.className = "card perspective-1000 aspect-square cursor-pointer group";
+                element.innerHTML = `
+                    <div class="card-inner w-full h-full relative preserve-3d">
+                        <div class="card-front bg-white shadow-sm border border-gray-200 flex flex-col items-center justify-center group-hover:shadow-md transition-shadow">
+                            <span class="text-4xl sm:text-5xl font-medium text-gray-800">${item.kana}</span>
+                            <span class="text-[10px] sm:text-xs text-gray-400 mt-1 uppercase font-bold">${item.romaji}</span>
+                        </div>
+                        <div class="card-back bg-white shadow-sm border border-gray-200 overflow-hidden flex items-center justify-center">
+                            <img data-src="${item.img}" alt="${item.kana}" class="card-img object-cover w-full h-full">
+                        </div>
+                    </div>
+                `;
+                element.addEventListener('click', () => toggleCard(element));
             }
 
-            wrapper.className = "card perspective-1000 aspect-square cursor-pointer group";
-            wrapper.setAttribute('role', 'button');
-            wrapper.setAttribute('tabindex', '0');
-
-            wrapper.innerHTML = `
-                <div class="card-inner w-full h-full relative preserve-3d">
-                    <div class="card-front bg-white shadow-sm border border-gray-200 flex flex-col items-center justify-center group-hover:shadow-md transition-shadow">
-                        <span class="text-4xl sm:text-5xl font-medium text-gray-800">${item.kana}</span>
-                        <span class="text-[10px] sm:text-xs text-gray-400 mt-1 uppercase font-bold">${item.romaji}</span>
-                    </div>
-                    <div class="card-back bg-white shadow-sm border border-gray-200 overflow-hidden flex items-center justify-center">
-                        <img data-src="${item.img}" alt="${item.kana}" class="card-img object-cover w-full h-full">
-                    </div>
-                </div>
-            `;
-
-            wrapper.addEventListener('click', () => toggleCard(wrapper));
-            wrapper.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleCard(wrapper);
-                }
-            });
-
-            gridContainer.appendChild(wrapper);
+            gridContainer.appendChild(element);
         });
     }
 
